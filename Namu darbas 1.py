@@ -206,6 +206,159 @@ plot.set_title('Graph of mean smoothness vs diagnosis of tumor')
 
 # In[ ]:
 
+                       
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import pandas as pd
+print("Pandas imported successfully, version: "+pd.__version__)
+import scipy as sm
+from scipy.stats import *
+print("SciPy imported successfully, version: "+sm.__version__)
+
+import seaborn as sns
+print("Seaborn imported successfully, version: "+sns.__version__)
+sns.set(style="whitegrid")
+
+from sklearn.decomposition import PCA
+
+
+# In[2]:
+
+
+data_all = pd.read_csv('/Users/Vartotojas/Desktop/Breast_cancer_data.csv')
+
+
+# In[3]:
+
+
+data_all.head()
+
+
+# In[4]:
+
+
+data_all.mean()
+
+
+# In[6]:
+
+
+data_all.median()
+
+
+# In[7]:
+
+
+data_all.mode()
+
+
+# In[11]:
+
+
+data_all.std()
+
+
+# In[12]:
+
+
+data_all.var()
+
+
+# In[13]:
+
+
+data_all.describe()
+
+
+# In[14]:
+
+
+data_all.describe(include='all')
+
+
+# In[25]:
+
+
+
+y = data_all.diagnosis
+# drop the column 'id' as it is does not convey any useful info
+# drop diagnosis since we are separating labels and features 
+list = ['diagnosis']
+# X includes our features
+X = data_all.drop(list,axis = 1)
+# get the first ten features
+data_dia = y
+data = X
+data_std = (data-data.mean()) / (data.std()) # standardization
+# get the first 10 features
+data = pd.concat([y,data_std.iloc[:,0:10]],axis=1)
+data = pd.melt(data,id_vars='diagnosis',
+ var_name='features',
+ value_name='value')
+# make a violin plot
+plt.figure(figsize=(10,10))
+sns.violinplot(x='features', y='value', hue='diagnosis', data=data,split=True, inner='quart')
+plt.xticks(rotation=90)
+
+
+# In[26]:
+
+
+from matplotlib import pyplot as plt
+
+
+# In[27]:
+
+
+
+y = data_all.diagnosis
+list = ['diagnosis']
+X = data_all.drop(list,axis = 1)
+data_dia = y
+data = X
+data_std = (data-data.mean()) / (data.std()) 
+data = pd.concat([y,data_std.iloc[:,0:10]],axis=1)
+data = pd.melt(data,id_vars='diagnosis',
+ var_name='features',
+ value_name='value')
+plt.figure(figsize=(10,10))
+sns.violinplot(x='features', y='value', hue='diagnosis', data=data,split=True, inner='quart')
+plt.xticks(rotation=90)
+
+
+# In[ ]:
+
+
+
+
+
+# In[35]:
+
+
+import numpy as np
+f,ax = plt.subplots(figsize=(18, 18))
+matrix = np.triu(X.corr())
+sns.heatmap(X.corr(), annot=True, linewidths=.5, fmt= '1f',ax=ax, mask=matrix)
+
+
+# In[38]:
+
+
+num_missing = (data_all == 0).sum()
+
+
+# In[39]:
+
+
+print(num_missing)
+
+
+# In[ ]:
+
 
 
 
